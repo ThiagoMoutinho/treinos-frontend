@@ -1,83 +1,93 @@
 ## Componentes
 
-- Use componentes da biblioteca shadcn/ui o máximo possível ao criar/modificar components
-(veja https://ui.shadcn.com/ para a lista de componentes disponíveis).
+- Use componentes da biblioteca shadcn/ui o máximo possível ao criar/modificar componentes
+  (veja https://ui.shadcn.com/ para a lista de componentes disponíveis).
 - Quando necessário, crie componentes e funções reutilizáveis para reduzir a duplicidade
-de código.
+  de código.
 - Antes de criar um novo componente, **SEMPRE** use Context7 para verificar se já existe
-um componente do shadcn/ui que possa ser utilizado. Caso exista, instale-o.
+  um componente do shadcn/ui que possa ser utilizado. Caso exista, instale-o com
+  `pnpm dlx shadcn@latest add <componente>`.
 
 ## Formulários
-aL to chat, 3€K to
-- SEMPRE use Zod para validação de formulários.
-- Sempre use React Hook rorm para criação e validação de formulários. SEMPRE use o
-componente @components/ui/form.tsx para criar formulários.
+
+- **SEMPRE** use Zod para validação de formulários.
+- **SEMPRE** use React Hook Form para criação e validação de formulários.
+- **SEMPRE** use o componente `@/components/ui/form.tsx` para criar formulários. Se ele
+  ainda não existir, instale-o com `pnpm dlx shadcn@latest add form`.
 
 Exemplo de formulário:
 
 ```tsx
 "use client";
 
-I
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { z } from "zod";
-
-import { Button } from "@/components/ui/button";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
-import { input } from "@/components/ui/input";
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
-    username: z.string().min(2, {
-        message: "username must be at least 2 characters"
-    }),
+  username: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
 });
 
-export function ProfileForm () {
-    return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Username</FormLabel>
-                            <FormControl>
-                                <input placeholder="shadcn" {...field} />
-                            </FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            <Button type="submit">Submit</Button>
-            </form>
-        </Form>
-    );
-}
+type FormValues = z.infer<typeof formSchema>;
 
+export function ProfileForm() {
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+    },
+  });
+
+  const onSubmit = (values: FormValues) => {
+    console.log(values);
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input placeholder="shadcn" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Submit</Button>
+      </form>
+    </Form>
+  );
+}
 ```
 
 ## Estilização
 
-- ** NUNCA ** use cores hard-coded do Tailwind, mas **SEMPRE** as cores do tema que estão
-em @app/globals.css
-- Antes de criar uma nova variável de cor, **SEMPRE** busque na documentação do shadcn/ui
-sobre theming e veja se realmente é necessário.
-- **SEMPRE** veja os componentes que podem ser reutilizados para construção de uma página
-em @components/ui/page.tsx.
+- **NUNCA** use cores hard-coded do Tailwind (ex.: `bg-blue-500`, `text-gray-700`),
+  mas **SEMPRE** as cores do tema definidas em `@/app/globals.css`
+  (ex.: `bg-primary`, `text-muted-foreground`).
+- Antes de criar uma nova variável de cor, **SEMPRE** consulte a documentação de theming
+  do shadcn/ui (https://ui.shadcn.com/docs/theming) e confirme se ela é realmente necessária.
+- **SEMPRE** verifique os componentes em `@/components/ui/` que podem ser reutilizados
+  na construção de uma página.
 
 ## Imagens
 
-- **SEMPRE** use o componente 'Image' do Next para renderizar imagens.
+- **SEMPRE** use o componente `Image` de `next/image` para renderizar imagens.
