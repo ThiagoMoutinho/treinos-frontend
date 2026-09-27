@@ -7,6 +7,8 @@
 - Antes de criar um novo componente, **SEMPRE** use Context7 para verificar se já existe
   um componente do shadcn/ui que possa ser utilizado. Caso exista, instale-o com
   `pnpm dlx shadcn@latest add <componente>`.
+- **NUNCA** crie mais de um componente no mesmo arquivo. Cada componente deve ficar em
+  seu próprio arquivo, nomeado em kebab-case (ex.: `workout-day-card.tsx`).
 
 ## Formulários
 

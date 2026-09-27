@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Inter, Inter_Tight } from "next/font/google";
+import { Anton, Geist_Mono, Inter, Inter_Tight } from "next/font/google";
 import "./globals.css";
 
 import { Toaster } from "@/components/ui/sonner";
@@ -11,6 +11,12 @@ const inter = Inter({
 
 const interTight = Inter_Tight({
   variable: "--font-inter-tight",
+  subsets: ["latin"],
+});
+
+const anton = Anton({
+  variable: "--font-anton",
+  weight: "400",
   subsets: ["latin"],
 });
 
@@ -28,7 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${interTight.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${interTight.variable} ${anton.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         {children}
