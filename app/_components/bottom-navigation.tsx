@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import {
   Calendar,
   ChartNoAxesColumn,
@@ -8,30 +9,66 @@ import {
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { getHomeData } from "@/lib/api/rc-generated";
+import { cn } from "@/lib/utils";
 
+const ITEM_CLASS_NAME =
+  "size-12 rounded-none p-3 hover:bg-transparent [&_svg:not([class*='size-'])]:size-6";
+const ACTIVE_ITEM_CLASS_NAME = "text-foreground hover:text-foreground";
 const INACTIVE_ITEM_CLASS_NAME =
-  "size-12 rounded-none p-3 text-muted-foreground/66 hover:bg-transparent hover:text-muted-foreground/66 [&_svg:not([class*='size-'])]:size-6";
+  "text-muted-foreground/66 hover:text-muted-foreground/66";
 
-export const BottomNavigation = () => {
+interface BottomNavigationProps {
+  activeItem: "home" | "calendar";
+}
+
+export const BottomNavigation = async ({
+  activeItem,
+}: BottomNavigationProps) => {
+  const homeResponse = await getHomeData(dayjs().format("YYYY-MM-DD"));
+  const todayWorkoutDay =
+    homeResponse.status === 200 ? homeResponse.data.todayWorkoutDay : undefined;
+
+  const isHomeActive = activeItem === "home";
+  const isCalendarActive = activeItem === "calendar";
+  const calendarClassName = cn(
+    ITEM_CLASS_NAME,
+    isCalendarActive ? ACTIVE_ITEM_CLASS_NAME : INACTIVE_ITEM_CLASS_NAME,
+  );
+
   return (
     <nav className="fixed inset-x-0 bottom-0 z-10 mx-auto flex w-full max-w-3xl items-center justify-center gap-6 rounded-t-[20px] border border-border bg-background px-6 py-4">
       <Button
         asChild
         variant="ghost"
-        className="size-12 rounded-none p-3 text-foreground hover:bg-transparent [&_svg:not([class*='size-'])]:size-6"
+        className={cn(
+          ITEM_CLASS_NAME,
+          isHomeActive ? ACTIVE_ITEM_CLASS_NAME : INACTIVE_ITEM_CLASS_NAME,
+        )}
       >
         <Link href="/" aria-label="Início">
           <House />
         </Link>
       </Button>
-      <Button
-        type="button"
-        variant="ghost"
-        aria-label="Calendário"
-        className={INACTIVE_ITEM_CLASS_NAME}
-      >
-        <Calendar />
-      </Button>
+      {todayWorkoutDay ? (
+        <Button asChild variant="ghost" className={calendarClassName}>
+          <Link
+            href={`/workout-plans/${todayWorkoutDay.workoutPlanId}/days/${todayWorkoutDay.id}`}
+            aria-label="Treino de hoje"
+          >
+            <Calendar />
+          </Link>
+        </Button>
+      ) : (
+        <Button
+          type="button"
+          variant="ghost"
+          aria-label="Treino de hoje"
+          className={calendarClassName}
+        >
+          <Calendar />
+        </Button>
+      )}
       <Button
         type="button"
         aria-label="IA"
@@ -43,7 +80,7 @@ export const BottomNavigation = () => {
         type="button"
         variant="ghost"
         aria-label="Estatísticas"
-        className={INACTIVE_ITEM_CLASS_NAME}
+        className={cn(ITEM_CLASS_NAME, INACTIVE_ITEM_CLASS_NAME)}
       >
         <ChartNoAxesColumn />
       </Button>
@@ -51,7 +88,7 @@ export const BottomNavigation = () => {
         type="button"
         variant="ghost"
         aria-label="Perfil"
-        className={INACTIVE_ITEM_CLASS_NAME}
+        className={cn(ITEM_CLASS_NAME, INACTIVE_ITEM_CLASS_NAME)}
       >
         <UserRound />
       </Button>

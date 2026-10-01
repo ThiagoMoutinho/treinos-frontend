@@ -1,25 +1,17 @@
 import { Calendar, Dumbbell, Timer } from "lucide-react";
 import Image from "next/image";
+import type { ReactNode } from "react";
 
+import { WEEK_DAY_LABELS, type WeekDay } from "@/app/_lib/week-days";
 import { cn } from "@/lib/utils";
-import type { GetHomeData200TodayWorkoutDayWeekDay } from "@/lib/api/rc-generated";
-
-const WEEK_DAY_LABELS: Record<GetHomeData200TodayWorkoutDayWeekDay, string> = {
-  MONDAY: "Segunda",
-  TUESDAY: "Terça",
-  WEDNESDAY: "Quarta",
-  THURSDAY: "Quinta",
-  FRIDAY: "Sexta",
-  SATURDAY: "Sábado",
-  SUNDAY: "Domingo",
-};
 
 interface WorkoutDayCardProps {
   name: string;
-  weekDay: GetHomeData200TodayWorkoutDayWeekDay;
+  weekDay: WeekDay;
   estimatedDurationInSeconds: number;
   exercisesCount: number;
   coverImageUrl?: string | null;
+  action?: ReactNode;
   className?: string;
 }
 
@@ -29,6 +21,7 @@ export const WorkoutDayCard = ({
   estimatedDurationInSeconds,
   exercisesCount,
   coverImageUrl,
+  action,
   className,
 }: WorkoutDayCardProps) => {
   const durationInMinutes = Math.round(estimatedDurationInSeconds / 60);
@@ -56,24 +49,30 @@ export const WorkoutDayCard = ({
         </span>
       </div>
 
-      <div className="relative flex flex-col items-start gap-2">
-        <h3 className="text-2xl leading-[1.05] font-semibold text-background">
-          {name}
-        </h3>
-        <div className="flex items-start gap-2">
-          <div className="flex items-center justify-center gap-1">
-            <Timer className="size-3.5 text-background" strokeWidth={1.5} />
-            <span className="text-xs leading-[1.4] text-background/70">
-              {durationInMinutes}min
-            </span>
-          </div>
-          <div className="flex items-center justify-center gap-1">
-            <Dumbbell className="size-3.5 text-background" strokeWidth={1.5} />
-            <span className="text-xs leading-[1.4] text-background/70">
-              {exercisesCount} {exercisesLabel}
-            </span>
+      <div className="relative flex w-full items-end justify-between gap-2">
+        <div className="flex flex-col items-start gap-2">
+          <h3 className="text-2xl leading-[1.05] font-semibold text-background">
+            {name}
+          </h3>
+          <div className="flex items-start gap-2">
+            <div className="flex items-center justify-center gap-1">
+              <Timer className="size-3.5 text-background" strokeWidth={1.5} />
+              <span className="text-xs leading-[1.4] text-background/70">
+                {durationInMinutes}min
+              </span>
+            </div>
+            <div className="flex items-center justify-center gap-1">
+              <Dumbbell
+                className="size-3.5 text-background"
+                strokeWidth={1.5}
+              />
+              <span className="text-xs leading-[1.4] text-background/70">
+                {exercisesCount} {exercisesLabel}
+              </span>
+            </div>
           </div>
         </div>
+        {action}
       </div>
     </div>
   );

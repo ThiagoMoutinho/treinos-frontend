@@ -77,7 +77,10 @@ export default async function Home() {
       <section className="flex w-full flex-col items-start gap-3 p-5">
         <SectionHeader title="Treino de Hoje" actionLabel="Ver treinos" />
         {todayWorkoutDay ? (
-          <Link href="#" className="w-full">
+          <Link
+            href={`/workout-plans/${todayWorkoutDay.workoutPlanId}/days/${todayWorkoutDay.id}`}
+            className="w-full"
+          >
             <WorkoutDayCard
               name={todayWorkoutDay.name}
               weekDay={todayWorkoutDay.weekDay}
@@ -97,7 +100,7 @@ export default async function Home() {
         )}
       </section>
 
-      <BottomNavigation />
+      <BottomNavigation activeItem="home" />
     </main>
   );
 }
