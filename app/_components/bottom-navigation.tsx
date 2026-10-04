@@ -19,7 +19,7 @@ const INACTIVE_ITEM_CLASS_NAME =
   "text-muted-foreground/66 hover:text-muted-foreground/66";
 
 interface BottomNavigationProps {
-  activeItem: "home" | "calendar" | "stats";
+  activeItem: "home" | "calendar" | "stats" | "profile";
 }
 
 export const BottomNavigation = async ({
@@ -35,6 +35,7 @@ export const BottomNavigation = async ({
   const isHomeActive = activeItem === "home";
   const isCalendarActive = activeItem === "calendar";
   const isStatsActive = activeItem === "stats";
+  const isProfileActive = activeItem === "profile";
   const calendarClassName = cn(
     ITEM_CLASS_NAME,
     isCalendarActive ? ACTIVE_ITEM_CLASS_NAME : INACTIVE_ITEM_CLASS_NAME,
@@ -90,12 +91,16 @@ export const BottomNavigation = async ({
         </Link>
       </Button>
       <Button
-        type="button"
+        asChild
         variant="ghost"
-        aria-label="Perfil"
-        className={cn(ITEM_CLASS_NAME, INACTIVE_ITEM_CLASS_NAME)}
+        className={cn(
+          ITEM_CLASS_NAME,
+          isProfileActive ? ACTIVE_ITEM_CLASS_NAME : INACTIVE_ITEM_CLASS_NAME,
+        )}
       >
-        <UserRound />
+        <Link href="/profile" aria-label="Perfil">
+          <UserRound />
+        </Link>
       </Button>
     </nav>
   );

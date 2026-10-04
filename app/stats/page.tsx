@@ -3,11 +3,11 @@ import { CircleCheck, CirclePercent, Hourglass } from "lucide-react";
 import { redirect } from "next/navigation";
 
 import { BottomNavigation } from "@/app/_components/bottom-navigation";
+import { StatCard } from "@/app/_components/stat-card";
 import { getServerSession } from "@/app/_lib/get-server-session";
 import { getStats } from "@/lib/api/rc-generated";
 
 import { ConsistencyHeatmap } from "./_components/consistency-heatmap";
-import { StatCard } from "./_components/stat-card";
 import { StreakBanner } from "./_components/streak-banner";
 import { formatTotalTime } from "./_lib/format-total-time";
 
