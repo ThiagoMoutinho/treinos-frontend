@@ -19,7 +19,7 @@ const INACTIVE_ITEM_CLASS_NAME =
   "text-muted-foreground/66 hover:text-muted-foreground/66";
 
 interface BottomNavigationProps {
-  activeItem: "home" | "calendar";
+  activeItem: "home" | "calendar" | "stats";
 }
 
 export const BottomNavigation = async ({
@@ -28,9 +28,13 @@ export const BottomNavigation = async ({
   const homeResponse = await getHomeData(dayjs().format("YYYY-MM-DD"));
   const todayWorkoutDay =
     homeResponse.status === 200 ? homeResponse.data.todayWorkoutDay : undefined;
+  const workoutPlanHref = todayWorkoutDay
+    ? `/workout-plans/${todayWorkoutDay.workoutPlanId}`
+    : null;
 
   const isHomeActive = activeItem === "home";
   const isCalendarActive = activeItem === "calendar";
+  const isStatsActive = activeItem === "stats";
   const calendarClassName = cn(
     ITEM_CLASS_NAME,
     isCalendarActive ? ACTIVE_ITEM_CLASS_NAME : INACTIVE_ITEM_CLASS_NAME,
@@ -50,12 +54,9 @@ export const BottomNavigation = async ({
           <House />
         </Link>
       </Button>
-      {todayWorkoutDay ? (
+      {workoutPlanHref ? (
         <Button asChild variant="ghost" className={calendarClassName}>
-          <Link
-            href={`/workout-plans/${todayWorkoutDay.workoutPlanId}/days/${todayWorkoutDay.id}`}
-            aria-label="Treino de hoje"
-          >
+          <Link href={workoutPlanHref} aria-label="Plano de treino">
             <Calendar />
           </Link>
         </Button>
@@ -63,7 +64,7 @@ export const BottomNavigation = async ({
         <Button
           type="button"
           variant="ghost"
-          aria-label="Treino de hoje"
+          aria-label="Plano de treino"
           className={calendarClassName}
         >
           <Calendar />
@@ -77,12 +78,16 @@ export const BottomNavigation = async ({
         <Sparkles />
       </Button>
       <Button
-        type="button"
+        asChild
         variant="ghost"
-        aria-label="Estatísticas"
-        className={cn(ITEM_CLASS_NAME, INACTIVE_ITEM_CLASS_NAME)}
+        className={cn(
+          ITEM_CLASS_NAME,
+          isStatsActive ? ACTIVE_ITEM_CLASS_NAME : INACTIVE_ITEM_CLASS_NAME,
+        )}
       >
-        <ChartNoAxesColumn />
+        <Link href="/stats" aria-label="Estatísticas">
+          <ChartNoAxesColumn />
+        </Link>
       </Button>
       <Button
         type="button"
