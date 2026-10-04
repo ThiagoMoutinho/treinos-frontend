@@ -1,7 +1,8 @@
-import { CircleQuestionMark, Zap } from "lucide-react";
+import { Zap } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+
+import { ExerciseHelpButton } from "./exercise-help-button";
 
 const BADGE_CLASS_NAME =
   "h-[22px] rounded-full bg-muted px-2.5 py-[5px] text-xs leading-none font-semibold text-muted-foreground uppercase";
@@ -27,15 +28,7 @@ export const ExerciseCard = ({
         <h3 className="text-base leading-[1.4] font-semibold text-foreground">
           {name}
         </h3>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          aria-label={`Sobre o exercício ${name}`}
-          className="size-5 rounded-full text-foreground hover:bg-transparent [&_svg:not([class*='size-'])]:size-5"
-        >
-          <CircleQuestionMark />
-        </Button>
+        <ExerciseHelpButton exerciseName={name} />
       </div>
       <div className="flex items-start gap-1.5">
         <Badge className={BADGE_CLASS_NAME}>

@@ -3,7 +3,6 @@ import {
   Calendar,
   ChartNoAxesColumn,
   House,
-  Sparkles,
   UserRound,
 } from "lucide-react";
 import Link from "next/link";
@@ -11,6 +10,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getHomeData } from "@/lib/api/rc-generated";
 import { cn } from "@/lib/utils";
+
+import { OpenChatButton } from "./open-chat-button";
 
 const ITEM_CLASS_NAME =
   "size-12 rounded-none p-3 hover:bg-transparent [&_svg:not([class*='size-'])]:size-6";
@@ -71,13 +72,7 @@ export const BottomNavigation = async ({
           <Calendar />
         </Button>
       )}
-      <Button
-        type="button"
-        aria-label="IA"
-        className="size-14 rounded-full p-4 [&_svg:not([class*='size-'])]:size-6"
-      >
-        <Sparkles />
-      </Button>
+      <OpenChatButton />
       <Button
         asChild
         variant="ghost"

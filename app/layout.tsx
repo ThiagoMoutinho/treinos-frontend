@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import { Anton, Geist_Mono, Inter, Inter_Tight } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { Suspense } from "react";
 import "./globals.css";
+import "streamdown/styles.css";
 
 import { Toaster } from "@/components/ui/sonner";
+
+import { Chatbot } from "./_components/chatbot";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -37,7 +42,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${inter.variable} ${interTight.variable} ${anton.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        {children}
+        <NuqsAdapter>
+          {children}
+          <Suspense>
+            <Chatbot />
+          </Suspense>
+        </NuqsAdapter>
         <Toaster />
       </body>
     </html>
