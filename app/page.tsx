@@ -5,25 +5,38 @@ import { redirect } from "next/navigation";
 
 import { getServerSession } from "@/app/_lib/get-server-session";
 import { Button } from "@/components/ui/button";
-import { getHomeData } from "@/lib/api/rc-generated";
+import { getHomeData, getUserTrainData } from "@/lib/api/rc-generated";
 
 import { BottomNavigation } from "./_components/bottom-navigation";
 import { SectionHeader } from "./_components/section-header";
 import { WeekConsistency } from "./_components/week-consistency";
 import { WorkoutDayCard } from "./_components/workout-day-card";
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: PageProps<"/">) {
   const session = await getServerSession();
 
   if (!session) {
     redirect("/auth");
   }
 
+  const { skipOnboarding } = await searchParams;
   const today = dayjs();
-  const homeResponse = await getHomeData(today.format("YYYY-MM-DD"));
+  const [homeResponse, trainDataResponse] = await Promise.all([
+    getHomeData(today.format("YYYY-MM-DD")),
+    getUserTrainData(),
+  ]);
 
-  if (homeResponse.status === 401) {
+  if (homeResponse.status === 401 || trainDataResponse.status === 401) {
     redirect("/auth");
+  }
+
+  if (
+    skipOnboarding !== "true" &&
+    (homeResponse.status === 404 || trainDataResponse.status === 404)
+  ) {
+    redirect("/onboarding");
   }
 
   const homeData = homeResponse.status === 200 ? homeResponse.data : null;
